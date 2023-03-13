@@ -10,37 +10,38 @@ import SnapKit
 
 class ViewController: UIViewController {
     
-    let service = Service()
+    //MARK: Private Properties
+    
+    private let service = Service()
+    private var imageArray = [UIImage]()
+    private var imageViewArray = [UIImageView]()
+    
+    //MARK: IBOutlets
     
     private lazy var firstImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     private lazy var secondeImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     private lazy var thirdImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     
     private lazy var fourthImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     
     private lazy var fifthImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
@@ -61,39 +62,49 @@ class ViewController: UIViewController {
         stackView.addArrangedSubview(thirdImageView)
         stackView.addArrangedSubview(fourthImageView)
         stackView.addArrangedSubview(fifthImageView)
-        
         return stackView
     }()
+    
+    //MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(stackView)
         view.addSubview(activityIndicator)
+        imageViewArray = [firstImageView,secondeImageView,thirdImageView,fourthImageView,fifthImageView]
         setupConstraints()
         activityIndicator.startAnimating()
         onLoad()
     }
 
+    // MARK: Privet func
+    
     private func onLoad() {
-        service.getImageURL { urlString, error in
-            guard
-                let urlString = urlString
-            else {
-                return
+        let queue = DispatchQueue.global (qos: .utility)
+        queue.async{
+            self.service.getImageURL { urlString, error in
+                guard
+                    let urlString = urlString
+                else {
+                    return
+                }
+                let image = self.service.loadImage(urlString: urlString)!
+                self.imageArray.append(image)
+                if self.imageArray.count != self.imageViewArray.count {
+                    self.onLoad()
+                }else{
+                    self.setupImage()
+                }
             }
-            
-//            let imageOne = self.service.loadImage(urlString: urlString)
-//            self.firstImageView.image = imageOne
-//            let imageTwo = self.service.loadImage(urlString: urlString)
-//            self.secondeImageView.image = imageTwo
-//            let imageThree = self.service.loadImage(urlString: urlString)
-//            self.thirdImageView.image = imageThree
-//            let imageForth = self.service.loadImage(urlString: urlString)
-//            self.fourthImageView.image = imageForth
-//            let imageFive = self.service.loadImage(urlString: urlString)
-//            self.fifthImageView.image = imageFive
-            
+        }
+    }
+    
+    private func setupImage(){
+        DispatchQueue.main.async {
+            for (index,view) in self.imageViewArray.enumerated(){
+                view.image = self.imageArray[index]
+            }
             self.activityIndicator.stopAnimating()
         }
     }
