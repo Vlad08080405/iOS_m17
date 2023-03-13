@@ -87,9 +87,18 @@ class ViewController: UIViewController {
                 if self.imageArray.count != self.imageViewArray.count {
                     self.onLoad()
                 }else{
-//                    self.setupImage()
+                    self.setupImage()
                 }
             }
+        }
+    }
+    
+    private func setupImage(){
+        DispatchQueue.main.async {
+            for (index,view) in self.imageViewArray.enumerated(){
+                view.image = self.imageArray[index]
+            }
+            self.activityIndicator.stopAnimating()
         }
     }
     
