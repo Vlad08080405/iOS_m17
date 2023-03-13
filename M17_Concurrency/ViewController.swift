@@ -10,9 +10,13 @@ import SnapKit
 
 class ViewController: UIViewController {
     
-    let service = Service()
-    var imageArray = [UIImage]()
-    var imageViewArray = [UIImageView]()
+    //MARK: Private Properties
+    
+    private let service = Service()
+    private var imageArray = [UIImage]()
+    private var imageViewArray = [UIImageView]()
+    
+    //MARK: IBOutlets
     
     private lazy var firstImageView: UIImageView = {
         let view = UIImageView()
@@ -58,9 +62,10 @@ class ViewController: UIViewController {
         stackView.addArrangedSubview(thirdImageView)
         stackView.addArrangedSubview(fourthImageView)
         stackView.addArrangedSubview(fifthImageView)
-        
         return stackView
     }()
+    
+    //MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,6 +78,8 @@ class ViewController: UIViewController {
         onLoad()
     }
 
+    // MARK: Privet func
+    
     private func onLoad() {
         let queue = DispatchQueue.global (qos: .utility)
         queue.async{
