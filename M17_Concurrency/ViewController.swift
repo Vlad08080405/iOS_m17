@@ -11,36 +11,33 @@ import SnapKit
 class ViewController: UIViewController {
     
     let service = Service()
+    var imageArray = [UIImage]()
+    var imageViewArray = [UIImageView]()
     
     private lazy var firstImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     private lazy var secondeImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     private lazy var thirdImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     
     private lazy var fourthImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
     
     private lazy var fifthImageView: UIImageView = {
         let view = UIImageView()
-//        view.image = UIImage(named: "1")
         view.contentMode = .scaleToFill
         return view
     }()
@@ -70,31 +67,29 @@ class ViewController: UIViewController {
         
         view.addSubview(stackView)
         view.addSubview(activityIndicator)
+        imageViewArray = [firstImageView,secondeImageView,thirdImageView,fourthImageView,fifthImageView]
         setupConstraints()
         activityIndicator.startAnimating()
         onLoad()
     }
 
     private func onLoad() {
-        service.getImageURL { urlString, error in
-            guard
-                let urlString = urlString
-            else {
-                return
+        let queue = DispatchQueue.global (qos: .utility)
+        queue.async{
+            self.service.getImageURL { urlString, error in
+                guard
+                    let urlString = urlString
+                else {
+                    return
+                }
+                let image = self.service.loadImage(urlString: urlString)!
+                self.imageArray.append(image)
+                if self.imageArray.count != self.imageViewArray.count {
+                    self.onLoad()
+                }else{
+//                    self.setupImage()
+                }
             }
-            
-//            let imageOne = self.service.loadImage(urlString: urlString)
-//            self.firstImageView.image = imageOne
-//            let imageTwo = self.service.loadImage(urlString: urlString)
-//            self.secondeImageView.image = imageTwo
-//            let imageThree = self.service.loadImage(urlString: urlString)
-//            self.thirdImageView.image = imageThree
-//            let imageForth = self.service.loadImage(urlString: urlString)
-//            self.fourthImageView.image = imageForth
-//            let imageFive = self.service.loadImage(urlString: urlString)
-//            self.fifthImageView.image = imageFive
-            
-            self.activityIndicator.stopAnimating()
         }
     }
     
