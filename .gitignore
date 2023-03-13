@@ -88,3 +88,4 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 
 iOSInjectionProject/
+/M17_Concurrency.xcodeproj/project.xcworkspace/contents.xcworkspacedata
